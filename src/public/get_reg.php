@@ -5,12 +5,30 @@
         <hr>
 
         <label for="name"><b>Name</b></label>
+        <?php if (isset($errors['name'])): ?>
+        <label> <?php
+                    echo $errors['name'];
+                ?>
+        </label>
+        <?php endif; ?>
         <input type="text" placeholder="Enter Name" name="name" id="name" required>
 
         <label for="email"><b>Email</b></label>
+        <?php if (isset($errors['email'])): ?>
+            <label> <?php
+                echo $errors['email'];
+                ?>
+            </label>
+        <?php endif; ?>
         <input type="text" placeholder="Enter Email" name="email" id="email" required>
 
         <label for="psw"><b>Password</b></label>
+        <?php if (isset($errors['password'])): ?>
+            <label> <?php
+                echo $errors['password'];
+                ?>
+            </label>
+        <?php endif; ?>
         <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
 
         <label for="psw-repeat"><b>Repeat Password</b></label>

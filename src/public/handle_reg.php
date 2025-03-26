@@ -2,22 +2,68 @@
 
 //Данные из POST-запроса
 //Добавить ВАЛИДАЦИЮ на каждую переменную
+$errors=[];
 $name= $_POST['name'];
-//тут для name пустота, кол-во симоволов, наличие цифр
+if (empty($name)) {
+    $errors['name']= "Поле Имя должно быть заполнено";
+} elseif (strlen($name) <2) {
+    $errors['name']="Имя должно быть больше одного символа";
+} elseif (preg_match('/\d/', $name)) {
+    $errors['name']="Имя не должно содержать цифры.";
+}
+
 $email= $_POST['email'];
-//тут пустота, кол-во символов, наличие собачки, уникальность
+if (empty($email)) {
+    $errors['email']="Поле Email должно быть заполнено";
+} elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $errors['email']="Некорректный email.";
+}
+
 $password= $_POST['psw'];
-//тут пустота, кол-во символов, проверка на совпадение
-//здесь, если валидацию не пройдёт пользователь - не выполнять нижний код
+$check_password=$_POST['psw-repeat'];
+if (empty($password)) {
+    $errors['password']="Поле Password должно быть заполнено";
+} elseif (strlen($name) <=2) {
+    $errors['password']="Пароль должен содержать больше двух символов";
+}
+if ($password != $check_password) {
+    $errors['password']="Пароль не подтверждён";
+}
+//if (!empty($errors)) {
+//    foreach ($errors as $error) {
+//        echo $error . "\n";
+//    }
+//    exit;
+//}
+
 $pdo = new PDO("pgsql:host=database;port=5432;dbname=dbname", "dbuser", "dbpwd");
-//защититься от sql инъекций метод prepare and exec
-$pdo->exec("INSERT INTO users (name, email, password) VALUES ('$name', '$email', '$password')");
 
-//сделать sql запрос, вывести пользователя, которого зарегистрировался
-//prepare
-$stmt = $pdo->query("SELECT * FROM users");
-$result = $stmt->fetch();
-//вывести почту
-print_r($result);
 
-print_r($result['email']);
+$stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE email = :email");
+$stmt->execute([":email" => $email]);
+$count = $stmt->fetchColumn();
+
+    if ($count > 0) {
+         $errors['email']="Пользователь с email '$email' уже существует.";
+//        exit;
+    }
+    if (empty($errors)) {
+
+        // Вставка нового пользователя
+        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $pdo->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
+        $stmt->execute([
+            ":name" => $name,
+            ":email" => $email,
+            ":password" => $passwordHash
+        ]);
+    }
+require_once './get_reg.php';
+//$lastInsertId = $pdo->lastInsertId();
+//
+//// Получение данных пользователя по ID
+//$stmt = $pdo->prepare("SELECT * FROM users WHERE id = :id");
+//$stmt->execute([":id" => $lastInsertId]);
+//$lastUser = $stmt->fetch(PDO::FETCH_ASSOC);
+//
+//print_r($lastUser['email']);
