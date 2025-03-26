@@ -15,6 +15,7 @@ services:
     build: ./docker
     restart: always
     volumes:
+      - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-debug.ini
       - ./src/public:/var/www/html/src/public
     env_file:
       - .env
