@@ -1,11 +1,9 @@
 <?php
 
-//сессия???
-//шаблон каталог codepen
-if (isset($_COOKIE["userId"])) {
+if (isset($_SESSION["userId"])) {
     require_once "./catalog.php";
 } else {
     //http ответ 403 Форбиден - возвратить
-    echo "нет доступа";
+    echo "У вас нет доступа";
 }
 

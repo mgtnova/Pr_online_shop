@@ -8,7 +8,7 @@
 </head>
 <body>
 <div class="container" id="login-section" >
-     <form action="handle_login.php" method="POST">
+     <form action="/handle_login" method="POST">
     <h2>Login</h2>
     <?php if (isset($errors['name'])): ?>
         <label> <?php

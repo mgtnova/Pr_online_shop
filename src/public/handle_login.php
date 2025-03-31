@@ -36,10 +36,12 @@ if (empty($errors)) {
         if (password_verify($password, $passwordHash)) {
             //setcookie("userId",$result["id"]);
             $_SESSION['userId'] = $result["id"];
-            echo "Вы авторизировались";
+            require_once "./main.php";
         } else {
             echo "Неверный пароль или имя пользователя";
         }
     }
 
+//после логина сделали, проверку на сессию и показали страницу с каталогом
+//добавили страницу Мой профиль
 

@@ -7,6 +7,7 @@
 <body>
 <?php require './get_products.php'; ?>
 
+<h1>Добро пожаловать!</h1>
 <h1>Выберите ваш продукт</h1>
 <div class="container">
     <?php foreach ($products as $product): ?>
